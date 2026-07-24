@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Loader } from "@/components/Loader";
 import { CursorTrail } from "@/components/CursorTrail";
-import { AmbientToggle } from "@/components/AmbientToggle";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
@@ -22,7 +21,6 @@ function Index() {
     <>
       <Loader />
       <CursorTrail />
-      <AmbientToggle />
       <Nav />
       <main className="relative overflow-visible">
         <Hero />

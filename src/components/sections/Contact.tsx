@@ -8,6 +8,7 @@ import doodleArrow from "@/assets/inspos/doodle arrow.png";
 import doodleColdCoffee from "@/assets/inspos/doodle cold coffee.png";
 import stickerPaws from "@/assets/inspos/sticker paws.png";
 import roshniDhimarCv from "@/assets/inspos/Roshni Dhimar cv.pdf";
+import { AmbientToggle } from "@/components/AmbientToggle";
 
 export interface SubmissionData {
   name: string;
@@ -184,7 +185,7 @@ export function Contact() {
         src={rose}
         alt=""
         aria-hidden
-        className="absolute -bottom-4 -left-6 w-40 -rotate-12 opacity-90 pointer-events-none z-10"
+        className="absolute -bottom-16 md:-bottom-4 -left-6 w-40 -rotate-12 opacity-90 pointer-events-none z-10"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative">
@@ -397,18 +398,17 @@ export function Contact() {
       </div>
 
       {/* Full-width Dark Tone Footer */}
-      <footer className="w-full bg-[#241b18] text-[#f5f1eb] py-8 md:py-12 px-6 mt-24 border-t border-[color:var(--ink)]/20 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 pl-32 pr-4 sm:pl-36 md:px-0 text-left relative">
-          <div className="flex flex-col items-start gap-1 text-left">
+      <footer className="w-full bg-[#241b18] text-[#f5f1eb] pt-8 pb-20 md:py-12 px-6 mt-24 border-t border-[color:var(--ink)]/20 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left relative pl-20 sm:pl-28 md:pl-0 pr-4 md:pr-0">
+          <div className="flex flex-col items-center md:items-start gap-1 text-center md:text-left">
             <p className="hand text-2xl font-bold tracking-wide text-[#f5f1eb]">Roshni Dhimar</p>
             <p className="hand text-sm text-[#f5f1eb]/70">handwritten with care · rosh · 2026</p>
           </div>
-          <div className="flex flex-wrap justify-start gap-4 sm:gap-6 max-w-xs sm:max-w-none">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 max-w-xs sm:max-w-none">
             {[
               ["github", "https://github.com/Roshni-Dhimar-28"],
               ["linkedin", "https://www.linkedin.com/in/roshnidhimar"],
               ["email", "mailto:rosedhimar@gmail.com"],
-              ["read.cv", roshniDhimarCv],
             ].map(([k, href]) => (
               <a
                 key={k}
@@ -422,6 +422,9 @@ export function Contact() {
             ))}
           </div>
         </div>
+
+        {/* Ambient Mode Toggle */}
+        <AmbientToggle />
       </footer>
     </section>
   );
