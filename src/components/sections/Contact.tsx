@@ -145,11 +145,10 @@ export const submitContactForm = createServerFn({ method: "POST" })
         success: true,
         message: emailSent
           ? "Thank you! Your note has been pinned and sent to my email."
-          : `Thank you! Your note has been pinned. ${
-              emailError
-                ? `(Email fail: ${emailError})`
-                : "(Setup SMTP in .env to receive email alerts)"
-            }`,
+          : `Thank you! Your note has been pinned. ${emailError
+            ? `(Email fail: ${emailError})`
+            : "(Setup SMTP in .env to receive email alerts)"
+          }`,
       };
     } catch (error) {
       console.error("Failed to save submission:", error);
