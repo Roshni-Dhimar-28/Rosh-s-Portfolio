@@ -57,62 +57,45 @@ export function FrameVideoPlayer() {
     };
   }, [isLoaderFinished]);
 
-  // 1. Setup sequential image loading logic
+  // 1. Setup parallel image loading and decoding logic
   useEffect(() => {
     isDestroyedRef.current = false;
     setLoadedCount(0);
     setPreloadingFinished(false);
 
-    const urlsToLoad = [...activeFrameUrls];
-    loadingQueueRef.current = urlsToLoad;
+    // Create parallel loading promises
+    const promises = activeFrameUrls.map((url) => {
+      return preloadImage(url)
+        .then((img) => {
+          if (!isDestroyedRef.current) {
+            setLoadedCount((prev) => prev + 1);
+          }
+          return img;
+        })
+        .catch((err) => {
+          console.error("Failed to load frame URL:", url, err);
+          return null;
+        });
+    });
 
-    // Load first frame immediately for instant visual representation
-    const firstUrl = urlsToLoad[0];
-    if (firstUrl) {
-      preloadImage(firstUrl).then(() => {
-        drawFrame(0);
-      });
-    }
-
-    // Sequentially load remaining frames in the background
-    let activeLoaders = 0;
-    const maxConcurrent = 3;
-
-    const loadNext = () => {
-      if (isDestroyedRef.current || loadingQueueRef.current.length === 0) {
-        if (activeLoaders === 0) {
-          setPreloadingFinished(true);
+    // Wait for all frames to be fully loaded and decoded
+    Promise.all(promises).then(() => {
+      if (!isDestroyedRef.current) {
+        setPreloadingFinished(true);
+        if (typeof window !== "undefined") {
+          (window as any).__animationFramesLoaded = true;
+          window.dispatchEvent(new CustomEvent("animation-frames-loaded"));
         }
-        return;
+        drawFrame(0);
       }
-
-      while (activeLoaders < maxConcurrent && loadingQueueRef.current.length > 0) {
-        const url = loadingQueueRef.current.shift()!;
-        activeLoaders++;
-
-        preloadImage(url)
-          .then(() => {
-            if (!isDestroyedRef.current) {
-              setLoadedCount((prev) => prev + 1);
-            }
-          })
-          .catch((err) => console.error("Failed to load frame URL:", url, err))
-          .finally(() => {
-            activeLoaders--;
-            loadNext();
-          });
-      }
-    };
-
-    loadNext();
+    });
 
     return () => {
       isDestroyedRef.current = true;
-      loadingQueueRef.current = [];
     };
   }, []);
 
-  // Helper to preload a single image and cache it in the ref
+  // Helper to preload a single image, decode it, and cache it in the ref
   const preloadImage = (url: string): Promise<HTMLImageElement> => {
     if (imagesRef.current[url]) {
       return Promise.resolve(imagesRef.current[url]);
@@ -121,9 +104,16 @@ export function FrameVideoPlayer() {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => {
-        imagesRef.current[url] = img;
-        resolve(img);
+      img.onload = async () => {
+        try {
+          await img.decode();
+          imagesRef.current[url] = img;
+          resolve(img);
+        } catch (e) {
+          // Fallback: if decode fails, cache and resolve anyway so we don't block playback
+          imagesRef.current[url] = img;
+          resolve(img);
+        }
       };
       img.onerror = (e) => reject(e);
     });

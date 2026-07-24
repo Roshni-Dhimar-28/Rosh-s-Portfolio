@@ -3,10 +3,41 @@ import { useEffect, useState } from "react";
 
 export function Loader() {
   const [show, setShow] = useState(true);
+  const [timerFinished, setTimerFinished] = useState(false);
+  const [assetsLoaded, setAssetsLoaded] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !!(window as any).__animationFramesLoaded;
+    }
+    return false;
+  });
+
   useEffect(() => {
-    const t = setTimeout(() => setShow(false), 3200);
+    const t = setTimeout(() => setTimerFinished(true), 3200);
     return () => clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (assetsLoaded) return;
+
+    const handleLoaded = () => {
+      setAssetsLoaded(true);
+    };
+
+    window.addEventListener("animation-frames-loaded", handleLoaded);
+    if (typeof window !== "undefined" && (window as any).__animationFramesLoaded) {
+      setAssetsLoaded(true);
+    }
+
+    return () => {
+      window.removeEventListener("animation-frames-loaded", handleLoaded);
+    };
+  }, [assetsLoaded]);
+
+  useEffect(() => {
+    if (timerFinished && assetsLoaded) {
+      setShow(false);
+    }
+  }, [timerFinished, assetsLoaded]);
 
   return (
     <AnimatePresence
