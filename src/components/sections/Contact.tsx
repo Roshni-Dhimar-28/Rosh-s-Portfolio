@@ -184,7 +184,7 @@ export function Contact() {
         src={rose}
         alt=""
         aria-hidden
-        className="absolute -bottom-4 -left-6 w-40 -rotate-12 opacity-90 pointer-events-none"
+        className="absolute -bottom-4 -left-6 w-40 -rotate-12 opacity-90 pointer-events-none z-10"
       />
 
       <div className="max-w-4xl mx-auto px-6 relative">
@@ -397,13 +397,13 @@ export function Contact() {
       </div>
 
       {/* Full-width Dark Tone Footer */}
-      <footer className="w-full bg-[#241b18] text-[#f5f1eb] py-12 px-6 mt-24 border-t border-[color:var(--ink)]/20">
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
+      <footer className="w-full bg-[#241b18] text-[#f5f1eb] py-8 md:py-12 px-6 mt-24 border-t border-[color:var(--ink)]/20 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 pl-32 pr-4 sm:pl-36 md:px-0 text-left relative">
+          <div className="flex flex-col items-start gap-1 text-left">
             <p className="hand text-2xl font-bold tracking-wide text-[#f5f1eb]">Roshni Dhimar</p>
             <p className="hand text-sm text-[#f5f1eb]/70">handwritten with care · rosh · 2026</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-start gap-4 sm:gap-6 max-w-xs sm:max-w-none">
             {[
               ["github", "https://github.com/Roshni-Dhimar-28"],
               ["linkedin", "https://www.linkedin.com/in/roshnidhimar"],
@@ -415,7 +415,7 @@ export function Contact() {
                 href={href}
                 target={k !== "email" ? "_blank" : undefined}
                 rel={k !== "email" ? "noopener noreferrer" : undefined}
-                className="hand text-lg text-[#f5f1eb]/85 hover:text-[color:var(--rose)] hover:underline transition-colors no-underline"
+                className="hand text-lg text-[#f5f1eb]/85 hover:text-[color:var(--rose)] hover:underline transition-colors no-underline px-1"
               >
                 {k}
               </a>
