@@ -32,28 +32,7 @@ export const submitContactForm = createServerFn({ method: "POST" })
     const fs = await import("fs").then((m) => m.promises);
     const path = await import("path").then((m) => m.default);
 
-    const filePath = path.join(process.cwd(), "contact_submissions.json");
-    const submission = {
-      ...data,
-      timestamp: new Date().toISOString(),
-    };
-
     try {
-      let submissions: Array<unknown> = [];
-
-      try {
-        const fileContent = await fs.readFile(filePath, "utf-8");
-        submissions = JSON.parse(fileContent);
-      } catch (e) {
-        // File does not exist yet or is invalid, start with empty list
-      }
-
-      submissions.push(submission);
-
-      // Write back formatted JSON
-      await fs.writeFile(filePath, JSON.stringify(submissions, null, 2), "utf-8");
-      console.log("Saved submission successfully to:", filePath);
-
       let emailSent = false;
       let emailError = "";
 
@@ -151,8 +130,8 @@ export const submitContactForm = createServerFn({ method: "POST" })
           }`,
       };
     } catch (error) {
-      console.error("Failed to save submission:", error);
-      throw new Error("Could not save message. Please try again.");
+      console.error("Failed to process submission:", error);
+      throw new Error("Could not send message. Please try again.");
     }
   });
 
